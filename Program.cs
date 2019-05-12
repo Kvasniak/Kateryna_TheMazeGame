@@ -10,14 +10,52 @@ namespace ConsoleGame2
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-            Console.BackgroundColor = ConsoleColor.Gray;
-            Matrix m = new Matrix();
-            m.FillMatrix();
-            Render r = new Render();
-            r.FillMatrix();
-            Render.Group();
-            MoveHero.Process();      
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Пожалуйста, введите свое имя ");
+            string userName = Console.ReadLine();
+            bool status = true;
+            do
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.WriteLine($"{userName},выберите один пункт из меню, нажав соответствующую клавишу");
+                Console.WriteLine("   МЕНЮ");
+                Console.WriteLine("1. Играть\n2. Правила игры\n3. Выход\n ");
+                int choice = int.Parse(Console.ReadLine());
+                
+                switch (choice)
+                {
+                    case 1:
+                        Console.Clear();
+                        Console.OutputEncoding = Encoding.UTF8;
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Matrix m = new Matrix();
+                        m.FillMatrix();
+                        Render r = new Render();
+                        r.FillMatrix();
+                        Render.Group();
+                        MoveHero.Process();
+                        status = false;
+                        break;
+                    case 2:
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                        Console.WriteLine("Правила игры: \n Цель игры - как можно быстрее выбраться из лабиринта. Во время игры  герой должен собирать " +
+                            "монетки, жизни, кристаллы, чтобы получить максимальное количество очков. Также игрок должен найти ключ, чтобы открыть дверь к выходу." +
+                            $"Но не все так просто, как кажется! {userName}, Вас ожидают смертельные ловушки, коварные призы и уменьшение очков. Поэтому, для того, чтобы выбраться из " +
+                            "лабиринта, нужно собирать как можно больше жизней.");
+                        break;
+                    case 3:
+                        Console.Clear();
+                        Environment.Exit(0);
+                        status = false;
+                        break;
+                    default:
+                        Console.WriteLine("Ошибка");
+                        break;
+                }
+            }
+            while (status);
         }
     }
     abstract class PlayField
@@ -44,9 +82,11 @@ namespace ConsoleGame2
     }
     class Matrix : PlayField
     {
-         public static char[,] charField = new char[,] {
+
+        public static char[,] charField = new char[,] {
+
             {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
-            {'#','☻',' ','o',' ','◄',' ','o',' ',' ',' ','o',' ','o',' ',' ',' ',' ',' ',' ','#',' ',' ','o','#',' ',' ',' ','o',' ',' ',' ',' ','o','#'},
+            {'#','☻',' ','o',' ',' ','◄',' ',' ',' ',' ','o',' ','o',' ',' ',' ',' ',' ',' ','#',' ',' ','o','#',' ',' ',' ','o',' ',' ',' ',' ','o','#'},
             {'#',' ','#','#','#',' ','#','#','#','#','#','#','#',' ','#','#','#',' ','#','o','#','o','#',' ','#',' ','#','#','#','#','#','#','#',' ','#'},
             {'#',' ','#','Ø','#','o','#',' ','o',' ','#','~',' ','o','#','Ø','#',' ','#','Ø','#',' ','#',' ',' ',' ','#','♦','#',' ',' ',' ','#','◄','#'},
             {'#',' ','#',' ','#',' ','#',' ','#','o','#','#','#','#','#',' ','#',' ','#','#','#',' ','#','#','#','#','#','~','#',' ','#','o','#',' ','#'},
@@ -58,11 +98,11 @@ namespace ConsoleGame2
             {'#',' ','#',' ','#',' ','#','#','#','◄','#','#','#','#','#','~','#','#','#','o','#','#','#',' ','#','#','#',' ','#','o','#',' ','#','o','#'},
             {'#','o','#',' ','#','Ø','#','~','#',' ',' ',' ','▲',' ','#','o','#',' ','#',' ',' ',' ','#',' ','o',' ','#','~',' ',' ','#','o','#',' ','#'},
             {'#',' ','#','o','#','#','#',' ','#',' ','#','#','#','o','#','o','#',' ','#','#','#',' ','#',' ','#',' ','#','#','#','#','#',' ','#','~','#'},
-            {'#',' ','#',' ','♦',' ',' ',' ','#','o',' ',' ','#',' ','#','Ø','#','◄','#','~','#',' ','#','o','#',' ',' ',' ',' ',' ','#',' ','#',' ','#'},
+            {'#',' ','#',' ','♦',' ',' ',' ','#','o',' ',' ','#',' ','#','Ø','#','◄','#','~','#',' ','#','o','#',' ','~',' ',' ',' ','#',' ','#',' ','#'},
             {'#','~','#',' ','#',' ','#','o','#',' ','#',' ','#',' ','#','#','#',' ','#',' ','#','o','#',' ','#','#','#','#','#',' ','#','♥','#','B','#'},
-            {'#','B','#','~','#',' ','#','~','#',' ','#','o','#',' ','o',' ',' ',' ',' ',' ','#','Ø','#',' ','▲','o',' ','~','#','?','#','Ø','#','o','#'},
+            {'#','B','#','~','#',' ','#','~','#',' ','#','o','#',' ','o',' ',' ',' ',' ',' ','#','Ø','#',' ','▲','o',' ','~','#','?','#','Ø','#',' ','#'},
             {'#','o','#','#','#',' ','#','#','#',' ','#',' ','#','#','#','#','#','#','#','#','#','#','#','#','#',' ','#','#','#',' ','#','#','#','B','#'},
-            {'#','~',' ','o','#',' ','#',' ',' ','o','#',' ',' ',' ',' ',' ',' ','o','#',' ',' ',' ','#','▲','#',' ','#','~','#',' ',' ',' ',' ',' ','#'},
+            {'#','~',' ','o','#',' ','#',' ',' ','o','#',' ',' ',' ',' ',' ',' ','o','#',' ',' ',' ','#','▲','#',' ','#','~','#','~',' ',' ','~',' ','#'},
             {'#','#','#','o','#',' ','#',' ','#',' ','#','#','#','#','#','#','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#','#','#','#','#','#','#'},
             {'#','▲','o','o','#','♥','#',' ','#',' ',' ','o','B','o','o','♥','#','▲',' ',' ','#','o',' ',' ','#',' ',' ','▲',' ','o',' ','♦',' ','♥','#'},
             {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
@@ -78,7 +118,7 @@ namespace ConsoleGame2
             get { return charField[i, k]; }
         }
 
-        public  virtual void FillMatrix()
+        public virtual void FillMatrix()
         {
             for (int i = 0; i < rows; i++)
             {
@@ -89,8 +129,9 @@ namespace ConsoleGame2
             }
         }
     }
-    class Render:Methods
+    class Render : Methods
     {
+        
         public static void Group()
         {
             PrintCoins();
@@ -99,13 +140,13 @@ namespace ConsoleGame2
             GetScore();
             PrintScore();
             PrintCrystals();
-            string[] info = { "☻ - ГЛАВНЫЙ ГЕРОЙ ", "◄ - ИНОГДА РАБОТАЮЩИЙ ТЕЛЕПОРТ", "# - СТЕНА ", "o - МОНЕТКА","? - СЕКРЕТНЫЙ ПРИЗ", "♥ - ЖИЗНЬ", "♦ - КРИСТАЛЛ", "~ - УМЕНЬШЕНИЕ ЖИЗНЕЙ ", "▲ - ТЕЛЕПОРТ В СЛУЧАЙНОЕ МЕСТО", "Ø - ЛОВУШКА(ПРОИГРЫШ) ", "b - КЛЮЧ", "B - ДВЕРЬ ","+ - ПРИЗ(ДОПОЛНИТЕЛЬНАЯ ЖИЗНЬ)", "→ - ВЫХОД" };
-            for(int i = 0; i < info.Length; i++)
+            string[] info = { "☻ - ГЛАВНЫЙ ГЕРОЙ ", "◄ - ИНОГДА РАБОТАЮЩИЙ ТЕЛЕПОРТ", "# - СТЕНА ", "o - МОНЕТКА", "? - СЕКРЕТНЫЙ ПРИЗ", "♥ - ЖИЗНЬ", "♦ - КРИСТАЛЛ", "~ - УМЕНЬШЕНИЕ ЖИЗНЕЙ ", "▲ - ТЕЛЕПОРТ В СЛУЧАЙНОЕ МЕСТО", "Ø - ЛОВУШКА(ПРОИГРЫШ) ", "b - КЛЮЧ", "B - ДВЕРЬ ", "+ - ПРИЗ(ДОПОЛНИТЕЛЬНАЯ ЖИЗНЬ)", "→ - ВЫХОД" };
+            for (int i = 0; i < info.Length; i++)
             {
-                Console.SetCursorPosition(40, i+7);
+                Console.SetCursorPosition(40, i + 7);
                 Console.WriteLine(info[i]);
             }
-            
+
         }
         public override void FillMatrix()
         {
@@ -156,7 +197,7 @@ namespace ConsoleGame2
             }
         }
     }
-    class Methods:Matrix
+    class Methods : Matrix
     {
         static public int coin = 0;
         static public int lives = 3;
@@ -164,20 +205,23 @@ namespace ConsoleGame2
         static public int score = 0;
         static public int crystals = 0;
         static public int times = 0;
+        static public int keys = 0;
         static public bool gameStatus = true;
 
         public static void Win()
         {
             Console.Clear();
-            Console.WriteLine("YOU WIN!");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Вы выиграли!");
             Console.Beep(1000, 600);
             gameStatus = false;
+            Console.ReadKey();
         }
 
         public static void Lose()
         {
             Console.Clear();
-            Console.WriteLine("YOU LOSE!");
+            Console.WriteLine("К сожалению, Вы проиграли!");
             Console.Beep(200, 700);
             gameStatus = false;
             Console.ReadKey();
@@ -217,7 +261,7 @@ namespace ConsoleGame2
         public static void TeleportSometimes(int first, int second)
         {
             ++times;
-            if(times%3==0)
+            if (times % 3 == 0)
             {
                 Teleport();
             }
@@ -237,18 +281,18 @@ namespace ConsoleGame2
             int[] arr = { coin, lives };
             Random random = new Random();
             int randomForArr = random.Next(0, 2);
-            if(randomForArr == 0)
+            if (randomForArr == 0)
             {
                 int plus = random.Next(5, 21);
                 Console.SetCursorPosition(66, 7);
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"ВЫ ПОЛУЧИЛИ {plus+1} ДОПОЛНИТЕЛЬНЫХ МОНЕТОК!   ");
+                Console.WriteLine($"ВЫ ПОЛУЧИЛИ {plus + 1} ДОПОЛНИТЕЛЬНЫХ МОНЕТОК!   ");
                 coin += plus;
                 PrintCoins();
                 GetScore();
                 PrintScore();
             }
-            else if(randomForArr == 1)
+            else if (randomForArr == 1)
             {
                 int plus = random.Next(2, 4);
                 Console.SetCursorPosition(66, 7);
@@ -282,7 +326,7 @@ namespace ConsoleGame2
         {
             Console.SetCursorPosition(40, 0);
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine($"КОЛИЧЕСТВО МОНЕТ - {coin}");
+            Console.WriteLine($"КОЛИЧЕСТВО  МОНЕТ - {coin}");
             coin++;
         }
 
@@ -306,20 +350,24 @@ namespace ConsoleGame2
             Console.SetCursorPosition(40, 3);
             Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine($"ВАШ СЧЁТ - {score}");
+            if(!gameStatus)
+            {
+                Console.Clear();
+            }
         }
 
         public static void GetScore()
         {
-            score = (coin * 5 + lives * 10 + crystals*50) - 35;
+            score = (coin * 5 + lives * 10 + crystals * 50) - 35;
         }
 
         public static void CheckScore()
         {
-            if(score>=200)
+            if (score >= 500)
             {
                 Win();
                 Console.SetCursorPosition(0, 3);
-                Console.WriteLine("ПОЗДАРВЛЯЕМ!!!  ВЫ НАБРАЛИ 200+ ОЧКОВ! ");
+                Console.WriteLine("ПОЗДАРВЛЯЕМ!!!  ВЫ НАБРАЛИ 500+ ОЧКОВ! ");
             }
         }
         public static void GetLives()
@@ -350,8 +398,289 @@ namespace ConsoleGame2
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Write("ВЫ ПОЛУЧИЛИ ПРИЗ - ЕЩЕ ОДНУ ЖИЗНЬ!");
         }
+
+        public static void WriteEmptyLine(int i, int j)
+        {
+            Console.SetCursorPosition(j, i);
+            Console.Write(FieldCell[i, j].Symbol = ' ');
+        }
+
+        public static void WriteHero(int j, int change)
+        {
+            Console.SetCursorPosition(j, change);
+            Console.Write(FieldCell[change, j].Symbol = '☻');
+        }
+
+        public static void WriteExit()
+        {
+            Console.SetCursorPosition(34, 15);
+            Console.Write(FieldCell[15, 34].Symbol = '→');
+        }
+
+        public static void FindOutScore()
+        {
+            GetScore();
+            CheckScore();
+            PrintScore();
+        }
+
+        public static void CheckMoves()
+        {
+            if(keys==1 && moves>70)
+            {
+                Console.SetCursorPosition(33, 14);
+                if (FieldCell[14, 33].Symbol == ' ')
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.Write(FieldCell[14, 33].Symbol = 'B');
+                }
+            }
+        }
+
+        public static void CheckCoordinatesUpDown(int changes, int x, int y, int telep)
+        {
+            if (changes >= 0 && FieldCell[changes, y].Symbol == ' ')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '→')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                Win();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == 'b')
+            {
+                keys++;
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                FindDoor();
+                GetPrize();
+                WriteExit();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '▲')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteEmptyLine(changes,y);
+                Teleport();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '◄')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                TeleportSometimes(telep, y);
+                CheckMoves();
+                return;
+            }
+
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '~')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                GetLives();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == 'o')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                PrintCoins();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '?')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                Console.Beep(250, 100);
+                GetSecretPrize();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '♥')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                ++lives;
+                PrintLives();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '♦')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                if (crystals == 3) { Win(); }
+                PrintCrystals();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == 'Ø')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                Lose();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[changes, y].Symbol == '+')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(y, changes);
+                PrintPrize();
+                ++lives;
+                PrintLives();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+        }
+
+        public static void CheckCoordinatesLeftRight(int changes, int x, int y, int telep)
+        {
+            if (changes >= 0 && FieldCell[x, changes].Symbol == ' ')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes,x);
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '→')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                Win();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == 'b')
+            {
+                keys++;
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                FindDoor();
+                GetPrize();
+                WriteExit();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '▲')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteEmptyLine(x, changes);
+                Teleport();
+                CheckMoves();
+                return;
+            }
+
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '◄')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                TeleportSometimes(x, telep);
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '~')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                GetLives();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == 'o')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                PrintCoins();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '?')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                Console.Beep(250, 100);
+                GetSecretPrize();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '♥')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                ++lives;
+                PrintLives();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '♦')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                if (crystals == 3) { Win(); }
+                PrintCrystals();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == 'Ø')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                Lose();
+                return;
+            }
+
+            else if (changes >= 0 && FieldCell[x, changes].Symbol == '+')
+            {
+                PrintMoves();
+                WriteEmptyLine(x, y);
+                WriteHero(changes, x);
+                PrintPrize();
+                ++lives;
+                PrintLives();
+                FindOutScore();
+                CheckMoves();
+                return;
+            }
+        }
     }
-    class MoveHero:Methods
+    class MoveHero : Methods
     {
         public static void moveHero(ConsoleKeyInfo keyInfo)
         {
@@ -363,572 +692,26 @@ namespace ConsoleGame2
                     {
                         if (keyInfo.Key == ConsoleKey.UpArrow)
                         {
-                            if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == ' ')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '→')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                Win();
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == 'b')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                FindDoor();
-                                GetPrize();
-                                Console.SetCursorPosition(34, 15);
-                                Console.Write(FieldCell[15, 34].Symbol = '→');
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '▲')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = ' ');
-                                Teleport();
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '◄')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                TeleportSometimes(i-2,j);
-                                return;
-                            }
-
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '~')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                GetLives();
-                                GetScore();
-                                CheckScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == 'o')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                PrintCoins();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '?')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                Console.Beep(250, 100);
-                                GetSecretPrize();
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '♥')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '♦')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                if (crystals == 3) { Win(); }
-                                PrintCrystals();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == 'Ø')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Lose();
-                                return;
-                            }
-                            else if ((i - 1) >= 0 && FieldCell[i - 1, j].Symbol == '+')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i - 1);
-                                Console.Write(FieldCell[i - 1, j].Symbol = '☻');
-                                PrintPrize();
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
+                            CheckCoordinatesUpDown(i - 1, i, j, i - 2);
+                            return;
                         }
 
                         else if (keyInfo.Key == ConsoleKey.DownArrow)
                         {
-                            if ((i + 1) <= rows && FieldCell[i + 1, j].Symbol == ' ')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                return;
-                            }
-                            else if ((i + 1) <= rows && FieldCell[i + 1, j].Symbol == '→')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                Win();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == 'b')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                FindDoor();
-                                GetPrize();
-                                Console.SetCursorPosition(34, 15);
-                                Console.Write(FieldCell[15, 34].Symbol = '→');
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == '▲')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = ' ');
-                                Teleport();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == '◄')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                TeleportSometimes(i + 2, j);
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == '~')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                GetLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == 'o')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                PrintCoins();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == '?')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                Console.Beep(250, 100);
-                                GetSecretPrize();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == '♥')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == '♦')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                if (crystals == 3) { Win(); }
-                                PrintCrystals();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == 'Ø')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Lose();
-                                return;
-                            }
-                            else if ((i + 1) >= 0 && FieldCell[i + 1, j].Symbol == '+')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j, i + 1);
-                                Console.Write(FieldCell[i + 1, j].Symbol = '☻');
-                                PrintPrize();
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
+                         CheckCoordinatesUpDown(i + 1, i, j, i + 2);
+                          return;
                         }
 
                         else if (keyInfo.Key == ConsoleKey.LeftArrow)
                         {
-                            if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == ' ')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '→')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                Win();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == 'b')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                FindDoor();
-                                GetPrize();
-                                Console.SetCursorPosition(34, 15);
-                                Console.Write(FieldCell[15, 34].Symbol = '→');
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '▲')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = ' ');
-                                Teleport();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '◄')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                TeleportSometimes(i, j - 2);
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '~')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                GetLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == 'o')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                PrintCoins();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '?')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                Console.Beep(250, 100);
-                                GetSecretPrize();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '♥')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '♦')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                if (crystals == 3) { Win(); }
-                                PrintCrystals();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == 'Ø')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Lose();
-                                return;
-                            }
-                            else if ((j - 1) >= 0 && FieldCell[i, j - 1].Symbol == '+')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j - 1, i);
-                                Console.Write(FieldCell[i, j - 1].Symbol = '☻');
-                                PrintPrize();
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
+                            CheckCoordinatesLeftRight(j - 1, i, j, j - 2);
+                            return;
                         }
 
                         else if (keyInfo.Key == ConsoleKey.RightArrow)
                         {
-                            if ((j + 1) <= columns && FieldCell[i, j + 1].Symbol == ' ')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                return;
-                            }
-                            else if ((j + 1) <= columns && FieldCell[i, j + 1].Symbol == '→')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                Win();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == 'b')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                FindDoor();
-                                GetPrize();
-                                Console.SetCursorPosition(34, 15);
-                                Console.Write(FieldCell[15, 34].Symbol = '→');
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == '▲')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = ' ');
-                                Teleport();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == '◄')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                TeleportSometimes(i, j + 2);
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == '~')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                GetLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == 'o')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                PrintCoins();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == '?')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                Console.Beep(250, 100);
-                                GetSecretPrize();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == '♥')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == '♦')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                if (crystals == 3) { Win(); }
-                                PrintCrystals();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == 'Ø')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Lose();
-                                return;
-                            }
-                            else if ((j + 1) >= 0 && FieldCell[i, j + 1].Symbol == '+')
-                            {
-                                PrintMoves();
-                                Console.SetCursorPosition(j, i);
-                                Console.Write(FieldCell[i, j].Symbol = ' ');
-                                Console.SetCursorPosition(j + 1, i);
-                                Console.Write(FieldCell[i, j + 1].Symbol = '☻');
-                                PrintPrize();
-                                ++lives;
-                                PrintLives();
-                                CheckScore();
-                                GetScore();
-                                PrintScore();
-                                return;
-                            }
+                            CheckCoordinatesLeftRight(j + 1, i, j, j + 2);
+                            return;
                         }
                     }
                 }
